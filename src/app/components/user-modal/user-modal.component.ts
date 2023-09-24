@@ -73,9 +73,8 @@ export class UserModalComponent {
     const password = (this.form.controls['passwordGroup'] as FormGroup).controls['password'].value
     if (this.action === 'create') {
       this.usersService.create({  ...this.form.value, password }).subscribe((user: IUser) => {
-        console.log(user)
-          this.store.dispatch(createUser({ user }));
-        })
+        this.store.dispatch(createUser({ user }));
+      })
     } else if (this.action === 'edit') {
       this.usersService.update(this.id,{  ...this.form.value, password }).subscribe((user: IUser) => {
         this.store.dispatch(updateUser({ user }));
