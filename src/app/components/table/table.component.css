@@ -1,0 +1,38 @@
+table {
+  width: 800px;
+  background-color: #ffffff;
+  font-size: 13px;
+}
+
+thead {
+  font-weight: bold;
+  color: #a4a4b5;
+  border: none;
+}
+
+thead tr th {
+  padding: 15px;
+}
+
+tbody {
+  color: #3f4254;
+}
+
+tbody tr {
+  height: 56px;
+  background-color: #f4f5f8;
+  opacity: 1;
+  border-bottom: 2px solid #ffffff;
+}
+
+tbody tr th {
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+tbody tr {
+  cursor: pointer;
+}

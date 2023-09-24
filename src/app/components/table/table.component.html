@@ -1,0 +1,17 @@
+<app-modal #modal action="edit"></app-modal>
+<table>
+  <thead>
+    <tr>
+      <th *ngFor="let column of tableColumnConfigs" id="{{column.defKey}}" width="{{column.width}}">{{ column.label.toUpperCase() }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let column of users$ | async" (click)="openModal(column)">
+      <th >{{ column.userName }}</th>
+      <th >{{ column.firstName }}</th>
+      <th >{{ column.lastName }}</th>
+      <th >{{ column.email }}</th>
+      <th >{{ column.type }}</th>
+    </tr>
+  </tbody>
+</table>

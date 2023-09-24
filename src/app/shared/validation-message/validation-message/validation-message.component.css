@@ -1,0 +1,12 @@
+.invalid-message_wrap {
+  margin-top: 5px;
+}
+
+.invalid-message {
+  color: #ef7da0;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+}
+
+

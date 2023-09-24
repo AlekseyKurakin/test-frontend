@@ -1,1 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+@charset "utf-8";
+
+@import 'styles/reset.css';
+
+body {
+  display: flex;
+  justify-content: center;
+  font-family: Helvetica, serif;
+  background-color: #eef0f8;
+}
+
+button:hover {
+  cursor: pointer;
+}

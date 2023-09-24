@@ -1,0 +1,10 @@
+.create-user-button {
+  float: right;
+  background: #2E8FF0;
+  box-shadow: 0 5px 8px #2E8FF029;
+  border-radius: 6px;
+  border: none;
+  color: #ffffff;
+  padding: 15px 20px 15px 20px;
+  margin-bottom: 15px;
+}
