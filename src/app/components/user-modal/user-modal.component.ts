@@ -2,13 +2,15 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { createUser, deleteUser, updateUser } from "../../store/users/users.actions";
+import {UsersService} from "../../services/users.service";
+import {IUser} from "../../common/interfaces";
 
 @Component({
-  selector: 'app-modal',
-  templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.css']
+  selector: 'user-modal',
+  templateUrl: './user-modal.component.html',
+  styleUrls: ['./user-modal.component.css']
 })
-export class ModalComponent {
+export class UserModalComponent {
   @ViewChild('modal') modal: ElementRef;
 
   action = 'create';
@@ -18,7 +20,8 @@ export class ModalComponent {
 
   constructor(
     private fb: FormBuilder,
-    private store: Store
+    private store: Store,
+    private usersService: UsersService
   ) {
     this.form = this.fb.group({
       userName: [null, [Validators.required, Validators.minLength(3)]],
@@ -69,9 +72,14 @@ export class ModalComponent {
   onSubmit() {
     const password = (this.form.controls['passwordGroup'] as FormGroup).controls['password'].value
     if (this.action === 'create') {
-      this.store.dispatch(createUser({ user: {  ...this.form.value, password }}));
+      this.usersService.create({  ...this.form.value, password }).subscribe((user: IUser) => {
+        console.log(user)
+          this.store.dispatch(createUser({ user }));
+        })
     } else if (this.action === 'edit') {
-      this.store.dispatch(updateUser({ user: {  id: this.id, ...this.form.value, password }}));
+      this.usersService.update(this.id,{  ...this.form.value, password }).subscribe((user: IUser) => {
+        this.store.dispatch(updateUser({ user }));
+      })
     }
     this.close();
   }

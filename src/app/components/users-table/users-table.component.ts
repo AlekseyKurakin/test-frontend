@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { State } from "../../store";
 import { IUser } from "../../common/interfaces";
@@ -6,10 +6,10 @@ import { selectUsers } from "../../store/users/users.selectors";
 
 @Component({
   selector: 'users-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  templateUrl: './users-table.component.html',
+  styleUrls: ['./users-table.component.css']
 })
-export class TableComponent implements OnInit {
+export class UsersTableComponent {
   @Output() viewUser: EventEmitter<IUser> = new EventEmitter();
 
   users$ = this.store.select(selectUsers);
@@ -45,9 +45,6 @@ export class TableComponent implements OnInit {
   constructor(
     protected store: Store<State>,
   ) { }
-
-  ngOnInit(): void {
-  }
 
   openModal(userData: IUser) {
     this.viewUser.emit(userData);

@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { TableComponent } from './components/table/table.component';
-import { ModalModule } from "./components/modal/modal.module";
+import { UsersTableComponent } from './components/users-table/users-table.component';
+import { UserModalModule } from "./components/user-modal/user-modal.module";
 import { NotFoundComponent } from './components/errors/not-found.component';
 import { AppRoutingModule } from "./app-routing.module";
 import { MainPageComponent } from './components/main-page/main-page.component';
@@ -19,14 +19,14 @@ import { HttpClientModule } from "@angular/common/http";
 @NgModule({
   declarations: [
     AppComponent,
-    TableComponent,
+    UsersTableComponent,
     NotFoundComponent,
     MainPageComponent,
     ForbiddenComponent,
   ],
   imports: [
     BrowserModule,
-    ModalModule,
+    UserModalModule,
     AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(reducers, {metaReducers}),

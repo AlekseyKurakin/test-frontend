@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ModalComponent } from "../modal/modal.component";
+import { UserModalComponent } from "../user-modal/user-modal.component";
 import { IUser } from "../../common/interfaces";
 
 @Component({
@@ -8,7 +8,7 @@ import { IUser } from "../../common/interfaces";
   styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent {
-  @ViewChild('userModal') userModal: ModalComponent
+  @ViewChild('userModal') userModal: UserModalComponent
 
   openModal(action, userData?: IUser) {
     this.userModal.open(action, userData);

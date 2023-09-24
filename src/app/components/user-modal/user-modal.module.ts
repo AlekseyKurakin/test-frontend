@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {ModalComponent} from "./modal.component";
+import {UserModalComponent} from "./user-modal.component";
 import {ValidationMessageModule} from "../../shared/validation-message/validation-message.module";
 import { ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
-    ModalComponent
+    UserModalComponent
   ],
   imports: [
     CommonModule,
@@ -14,7 +14,7 @@ import { ReactiveFormsModule } from "@angular/forms";
     ReactiveFormsModule,
   ],
   exports: [
-    ModalComponent
+    UserModalComponent
   ]
 })
-export class ModalModule { }
+export class UserModalModule { }

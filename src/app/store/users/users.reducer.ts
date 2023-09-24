@@ -1,6 +1,6 @@
-import {createEntityAdapter, EntityAdapter, EntityState} from "@ngrx/entity";
-import {IUser} from "../../common/interfaces";
-import {Action, createReducer, on} from "@ngrx/store";
+import { createEntityAdapter, EntityAdapter } from "@ngrx/entity";
+import { IUser } from "../../common/interfaces";
+import { Action, createReducer, on } from "@ngrx/store";
 import * as UserActions from './users.actions';
 
 export const usersFeatureKey = 'users';
@@ -15,22 +15,29 @@ const initialUsersState: UsersState = {
   users: [
     {
       id: 1,
-      userName: 'Inituser',
+      userName: 'Alex',
       firstName: 'Alexey',
-      lastName: 'Kurakin',
+      lastName: 'last name',
       email: 'kurakin.s.alexey@gmail.com',
       type: 'Admin',
-      password: '1234qwer',
+      password: '12345678',
     },
   ],
 };
 export const usersReducer = createReducer(
   initialUsersState,
 
-  on(UserActions.createUser, (state, { user }) => ({
-    ...state,
-    users: [...state.users, user],
-  })),
+  on(UserActions.createUser, (state, { user }) => {
+    // just some workaround because we dont have server to do it
+    const highestId = state.users.reduce((maxId, obj) => {
+      return obj.id > maxId ? obj.id : maxId;
+    }, -1);
+
+    return {
+      ...state,
+      users: [...state.users, {...user, id: highestId + 1 }],
+    }
+  }),
 
   on(UserActions.updateUser, (state, { user }) => ({
     ...state,

@@ -1,11 +1,12 @@
 import { Injectable } from "@angular/core";
 import { IUser } from "../common/interfaces";
 import { HttpClient } from "@angular/common/http";
-import { map, Observable } from "rxjs";
+import {map, Observable, of} from "rxjs";
 
 @Injectable()
 export class UsersService {
   url = 'someBeServer';
+  serverEnabled = false;
 
   constructor(
     private http: HttpClient
@@ -26,14 +27,14 @@ export class UsersService {
   }
 
   create(user: IUser): Observable<any> {
-    return this.mapResponse(this.http.post(this.url, user));
+    return this.serverEnabled ? this.mapResponse(this.http.post(this.url, user)) : of(user);
   }
 
   update(id: number, user: IUser): any {
-    this.http.put(this.url + `/${id}`, user)
+    return this.serverEnabled ? this.mapResponse( this.http.put(this.url + `/${id}`, user)) : of({id, ...user})
   }
 
   delete(id: number): any {
-    this.http.delete(this.url + `/${id}`)
+    return this.mapResponse(this.http.delete(this.url + `/${id}`))
   }
 }
