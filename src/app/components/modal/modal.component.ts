@@ -1,7 +1,7 @@
-import {Component, ViewChild, ElementRef, Input} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Store} from "@ngrx/store";
-import {createUser, deleteUser} from "../../store/users/users.actions";
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from "@ngrx/store";
+import { createUser, deleteUser, updateUser } from "../../store/users/users.actions";
 
 @Component({
   selector: 'app-modal',
@@ -9,9 +9,9 @@ import {createUser, deleteUser} from "../../store/users/users.actions";
   styleUrls: ['./modal.component.css']
 })
 export class ModalComponent {
-  @Input() action: string = 'create';
-  @ViewChild('myModal') modal: ElementRef;
+  @ViewChild('modal') modal: ElementRef;
 
+  action = 'create';
   id: number;
   types = ['Admin', 'Driver'];
   form: FormGroup;
@@ -33,9 +33,13 @@ export class ModalComponent {
     })
   }
 
-  open(userData?: any) {
+  open(action, userData?: any) {
+    this.action = action;
+    this.modal.nativeElement.style.display = 'block';
+
     if (userData) {
       this.id = userData.id;
+
       this.form.patchValue({
         userName: userData.userName,
         firstName: userData.firstName,
@@ -47,8 +51,9 @@ export class ModalComponent {
           confirmPassword: userData.password
         },
       })
+    } else {
+      this.form.get('type').patchValue('Admin');
     }
-    this.modal.nativeElement.style.display = 'block';
   }
 
   close() {
@@ -63,11 +68,15 @@ export class ModalComponent {
 
   onSubmit() {
     const password = (this.form.controls['passwordGroup'] as FormGroup).controls['password'].value
-    this.store.dispatch(createUser({ user: {  id: 2, ...this.form.value, password }}));
+    if (this.action === 'create') {
+      this.store.dispatch(createUser({ user: {  ...this.form.value, password }}));
+    } else if (this.action === 'edit') {
+      this.store.dispatch(updateUser({ user: {  id: this.id, ...this.form.value, password }}));
+    }
     this.close();
   }
 
-  onDelete() {
+  onDeleteUser() {
     this.store.dispatch(deleteUser({ id: this.id }));
     this.close();
   }

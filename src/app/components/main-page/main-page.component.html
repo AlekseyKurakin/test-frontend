@@ -1,7 +1,7 @@
-<app-modal #modal action="create"></app-modal>
+<app-modal #userModal></app-modal>
 <div class="main">
-  <button class="create-user-button" (click)="openModal()">
+  <button class="create-user-button" (click)="openModal('create')">
     Create user
   </button>
-  <app-table></app-table>
+  <users-table (viewUser)="openModal('edit', $event)"></users-table>
 </div>

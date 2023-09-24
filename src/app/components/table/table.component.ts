@@ -1,18 +1,17 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {ModalComponent} from "../modal/modal.component";
-import {Subscription} from "rxjs";
-import {select, Store} from "@ngrx/store";
-import {State} from "../../store";
-import {IUser} from "../../common/interfaces";
-import {selectUsers} from "../../store/users/users.selectors";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Store } from "@ngrx/store";
+import { State } from "../../store";
+import { IUser } from "../../common/interfaces";
+import { selectUsers } from "../../store/users/users.selectors";
 
 @Component({
-  selector: 'app-table',
+  selector: 'users-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
-  @ViewChild('modal') modal: ModalComponent
+  @Output() viewUser: EventEmitter<IUser> = new EventEmitter();
+
   users$ = this.store.select(selectUsers);
   tableColumnConfigs =
     [
@@ -50,7 +49,7 @@ export class TableComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openModal(userData: any) {
-    this.modal.open(userData);
+  openModal(userData: IUser) {
+    this.viewUser.emit(userData);
   }
 }

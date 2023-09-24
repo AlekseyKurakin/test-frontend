@@ -1,4 +1,4 @@
-<div #myModal class="container">
+<div #modal class="container">
   <div class="content">
     <div class="container-header">
       <h1>Create new user</h1>
@@ -51,15 +51,9 @@
         </div>
       </fieldset>
       <div class="control_buttons" [ngStyle]="{'justify-content': (action === 'create' ? 'center' : 'space-between')}">
-          <button *ngIf="action === 'edit'" type="button" class="delete_button" (click)="onDelete()">Delete</button>
-          <button
-            [disabled]='form.invalid'
-            class="submit_button"
-          >
-            {{ action === 'create' ? 'Create' : 'Save'}}
-          </button>
+          <button *ngIf="action === 'edit'" type="button" class="delete_button" (click)="onDeleteUser()">Delete</button>
+          <button class="submit_button" [disabled]='form.invalid'>{{ action === 'create' ? 'Create' : 'Save'}}</button>
       </div>
     </form>
-
   </div>
 </div>
