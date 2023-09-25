@@ -17,7 +17,7 @@ export class MessageService {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
-  showSuccessMessage(type: 'success'| 'error' | 'info', message: string) {
+  showMessage(type: 'success'| 'error' | 'info', message: string) {
     this.messageElement = this.renderer.createElement('div');
     this.messageElement.textContent = message;
     this.renderer.addClass(this.messageElement, 'message');

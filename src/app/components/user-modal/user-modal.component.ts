@@ -78,22 +78,22 @@ export class UserModalComponent {
     if (this.action === 'create') {
       this.usersService.create({  ...this.form.value, password }).pipe(
         catchError((error: any) => {
-          this.messageService.showSuccessMessage('error', 'Something went wrong on server side');
+          this.messageService.showMessage('error', `Something went wrong on server side: ${error}`);
           return throwError({error})
         })
       ).subscribe((user: IUser) => {
         this.store.dispatch(createUser({ user }));
-        this.messageService.showSuccessMessage('success', 'User was successfully created');
+        this.messageService.showMessage('success', 'User was successfully created');
       })
     } else if (this.action === 'edit') {
       this.usersService.update(this.id,{  ...this.form.value, password }).pipe(
         catchError((error: any) => {
-          this.messageService.showSuccessMessage('error', 'Something went wrong on server side');
+          this.messageService.showMessage('error', `Something went wrong on server side: ${error}`);
           return throwError({error})
         })
       ).subscribe((user: IUser) => {
         this.store.dispatch(updateUser({ user }));
-        this.messageService.showSuccessMessage('success', 'User was successfully updated');
+        this.messageService.showMessage('success', 'User was successfully updated');
       })
     }
     this.close();
@@ -101,7 +101,7 @@ export class UserModalComponent {
 
   onDeleteUser() {
     this.store.dispatch(deleteUser({ id: this.id }));
-    this.messageService.showSuccessMessage('success', 'User was successfully deleted');
+    this.messageService.showMessage('success', 'User was successfully deleted');
     this.close();
   }
 }
