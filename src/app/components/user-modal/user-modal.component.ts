@@ -81,22 +81,39 @@ export class UserModalComponent {
           this.messageService.showMessage('error', `Something went wrong on server side: ${error}`);
           return throwError({error})
         })
-      ).subscribe((user: IUser) => {
-        this.store.dispatch(createUser({ user }));
-        this.messageService.showMessage('success', 'User was successfully created');
+      ).subscribe((response: any) => {
+        if (response.error) {
+          if (response.error === 'userNameAlreadyTaken') {
+            this.form.get('userName').setErrors({'usernameTaken':  true })
+          } else {
+            this.messageService.showMessage('error', `Something went wrong on server side: ${response.error}`);
+          }
+        } else {
+          this.store.dispatch(createUser({ user: response }));
+          this.messageService.showMessage('success', 'User was successfully created');
+          this.close();
+        }
       })
     } else if (this.action === 'edit') {
       this.usersService.update(this.id,{  ...this.form.value, password }).pipe(
         catchError((error: any) => {
-          this.messageService.showMessage('error', `Something went wrong on server side: ${error}`);
+          this.messageService.showMessage('error', `Something went wrong on server side: ${error?.error}`);
           return throwError({error})
         })
-      ).subscribe((user: IUser) => {
-        this.store.dispatch(updateUser({ user }));
-        this.messageService.showMessage('success', 'User was successfully updated');
+      ).subscribe((response: any) => {
+        if (response.error) {
+          if (response.error === 'userNameAlreadyTaken') {
+            this.form.get('userName').setErrors({'usernameTaken':  true })
+          } else {
+            this.messageService.showMessage('error', `Something went wrong on server side: ${response.error}`);
+          }
+        } else {
+          this.store.dispatch(updateUser({ user: response }));
+          this.messageService.showMessage('success', 'User was successfully updated');
+          this.close();
+        }
       })
     }
-    this.close();
   }
 
   onDeleteUser() {
