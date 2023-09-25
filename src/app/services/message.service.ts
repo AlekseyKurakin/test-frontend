@@ -1,11 +1,13 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
+import { Subscription, timer } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
-export class MessageService {
+export class MessageService implements OnDestroy {
   private renderer: Renderer2;
   private messageElement: HTMLElement;
+  private timerSubscription = Subscription.EMPTY;
 
   messageColorByType = {
     'success': '#66bb6a',
@@ -18,6 +20,11 @@ export class MessageService {
   }
 
   showMessage(type: 'success'| 'error' | 'info', message: string) {
+    if (this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+      this.removeMessage();
+    }
+
     this.messageElement = this.renderer.createElement('div');
     this.messageElement.textContent = message;
     this.renderer.addClass(this.messageElement, 'message');
@@ -31,14 +38,18 @@ export class MessageService {
     this.renderer.setStyle(this.messageElement, 'box-shadow', '0px 10px 15px #4CAF505C');
     document.body.appendChild(this.messageElement);
 
-    setTimeout(() => {
-      this.hideSuccessMessage();
-    }, 2000);
+    this.timerSubscription = timer(2000).subscribe(() => {
+      this.removeMessage();
+    });
   }
 
-  private hideSuccessMessage() {
+  private removeMessage() {
     if (this.messageElement && this.messageElement.parentNode) {
       this.renderer.removeChild(document.body, this.messageElement);
     }
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription.unsubscribe()
   }
 }

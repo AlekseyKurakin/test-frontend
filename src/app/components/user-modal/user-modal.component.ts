@@ -4,8 +4,7 @@ import { Store } from "@ngrx/store";
 import { createUser, deleteUser, updateUser } from "../../store/users/users.actions";
 import { UsersService } from "../../services/users.service";
 import { MessageService } from "../../services/message.service";
-import { catchError, take } from "rxjs/operators";
-import { throwError } from "rxjs";
+import { take } from "rxjs/operators";
 
 @Component({
   selector: 'user-modal',
@@ -76,49 +75,48 @@ export class UserModalComponent {
     const password = (this.form.controls['passwordGroup'] as FormGroup).controls['password'].value
     if (this.action === 'create') {
       this.usersService.create({  ...this.form.value, password }).pipe(
-        catchError((error: any) => {
-          this.messageService.showMessage('error', `Something went wrong on server side: ${error}`);
-          return throwError({error})
-        })
-      ).subscribe((response: any) => {
-        if (response.error) {
-          if (response.error === 'userNameAlreadyTaken') {
-            this.form.get('userName').setErrors({'usernameTaken':  true })
+        take(1)
+      )
+        .subscribe((response: any) => {
+          if (response.error) {
+            if (response.error === 'userNameAlreadyTaken') {
+              this.form.get('userName').setErrors({'usernameTaken':  true })
+            } else {
+              this.messageService.showMessage('error', `Something went wrong on server side: ${response.error}`);
+            }
           } else {
-            this.messageService.showMessage('error', `Something went wrong on server side: ${response.error}`);
+            this.store.dispatch(createUser({ user: response }));
+            this.messageService.showMessage('success', 'User was successfully created');
+            this.close();
           }
-        } else {
-          this.store.dispatch(createUser({ user: response }));
-          this.messageService.showMessage('success', 'User was successfully created');
-          this.close();
-        }
-      })
+        })
     } else if (this.action === 'edit') {
       this.usersService.update(this.id,{  ...this.form.value, password }).pipe(
-        take(1),
-        catchError((error: any) => {
-          this.messageService.showMessage('error', `Something went wrong on server side: ${error?.error}`);
-          return throwError({error})
-        })
-      ).subscribe((response: any) => {
-        if (response.error) {
-          if (response.error === 'userNameAlreadyTaken') {
-            this.form.get('userName').setErrors({'usernameTaken':  true })
+        take(1)
+      )
+        .subscribe((response: any) => {
+          if (response.error) {
+            if (response.error === 'userNameAlreadyTaken') {
+              this.form.get('userName').setErrors({'usernameTaken':  true })
+            } else {
+              this.messageService.showMessage('error', `Something went wrong on server side: ${response.error}`);
+            }
           } else {
-            this.messageService.showMessage('error', `Something went wrong on server side: ${response.error}`);
+            this.store.dispatch(updateUser({ user: {...response, id: this.id} }));
+            this.messageService.showMessage('success', 'User was successfully updated');
+            this.close();
           }
-        } else {
-          this.store.dispatch(updateUser({ user: {...response, id: this.id} }));
-          this.messageService.showMessage('success', 'User was successfully updated');
-          this.close();
-        }
-      })
+        })
     }
   }
 
   onDeleteUser() {
-    this.store.dispatch(deleteUser({ id: this.id }));
-    this.messageService.showMessage('success', 'User was successfully deleted');
-    this.close();
+    this.usersService.delete(this.id)
+      .subscribe((response: any) => {
+        this.store.dispatch(deleteUser({ id: response }));
+        this.messageService.showMessage('success', 'User was successfully deleted');
+        this.close();
+      }
+    )
   }
 }

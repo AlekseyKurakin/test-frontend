@@ -15,7 +15,6 @@ export class UsersEffects {
   createUser$ = createEffect(() => this.actions$.pipe(
     ofType(UsersActions.createUser),
     tap(({user}: { user: IUser}) => {
-      console.log(user)
       // stub. Let's imagine there request to another server
     })
   ), { dispatch: false });

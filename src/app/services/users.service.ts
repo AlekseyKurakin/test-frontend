@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { IUser } from "../common/interfaces";
 import { HttpClient } from "@angular/common/http";
-import { map, Observable } from "rxjs";
+import { map, Observable, of } from "rxjs";
 import { selectUsers } from "../store/users/users.selectors";
 import { Store } from "@ngrx/store";
 import { State } from "../store";
@@ -43,7 +43,7 @@ export class UsersService {
       );
   }
 
-  update(id: number, user: IUser): any {
+  update(id: number, user: IUser): Observable<any> {
     return this.serverEnabled ? this.mapResponse( this.http.put(this.url + `/${id}`, user))
       : this.isUserNameTaken(user.userName, id).pipe(
         map(isUserNameTaken => {
@@ -56,8 +56,8 @@ export class UsersService {
       );
   }
 
-  delete(id: number): any {
-    return this.mapResponse(this.http.delete(this.url + `/${id}`))
+  delete(id: number): Observable<any> {
+    return this.serverEnabled ? this.mapResponse(this.http.delete(this.url + `/${id}`)) : of(id);
   }
 
   private isUserNameTaken(userName: string, id: number): Observable<any> {
