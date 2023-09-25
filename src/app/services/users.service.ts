@@ -5,7 +5,7 @@ import {map, Observable, of} from "rxjs";
 
 @Injectable()
 export class UsersService {
-  url = 'someBeServer';
+  url = 'someServer';
   serverEnabled = false;
 
   constructor(

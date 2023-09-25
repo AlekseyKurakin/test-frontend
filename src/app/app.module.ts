@@ -14,7 +14,8 @@ import { ForbiddenComponent } from './components/errors/forbidden.component';
 import { UsersService } from "./services/users.service";
 import { UsersEffects } from "./store/users/users.effects";
 import { EffectsModule } from "@ngrx/effects";
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import { AuthInterceptor } from "./interceptors/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -36,7 +37,12 @@ import { HttpClientModule } from "@angular/common/http";
   ],
   providers: [
     AuthGuardService,
-    UsersService
+    UsersService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

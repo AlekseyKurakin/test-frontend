@@ -4,6 +4,9 @@ import { Store } from "@ngrx/store";
 import { createUser, deleteUser, updateUser } from "../../store/users/users.actions";
 import {UsersService} from "../../services/users.service";
 import {IUser} from "../../common/interfaces";
+import { MessageService } from "../../services/message.service";
+import { catchError } from "rxjs/operators";
+import { throwError } from "rxjs";
 
 @Component({
   selector: 'user-modal',
@@ -21,7 +24,8 @@ export class UserModalComponent {
   constructor(
     private fb: FormBuilder,
     private store: Store,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private messageService: MessageService
   ) {
     this.form = this.fb.group({
       userName: [null, [Validators.required, Validators.minLength(3)]],
@@ -72,12 +76,24 @@ export class UserModalComponent {
   onSubmit() {
     const password = (this.form.controls['passwordGroup'] as FormGroup).controls['password'].value
     if (this.action === 'create') {
-      this.usersService.create({  ...this.form.value, password }).subscribe((user: IUser) => {
+      this.usersService.create({  ...this.form.value, password }).pipe(
+        catchError((error: any) => {
+          this.messageService.showSuccessMessage('error', 'Something went wrong on server side');
+          return throwError({error})
+        })
+      ).subscribe((user: IUser) => {
         this.store.dispatch(createUser({ user }));
+        this.messageService.showSuccessMessage('success', 'User was successfully created');
       })
     } else if (this.action === 'edit') {
-      this.usersService.update(this.id,{  ...this.form.value, password }).subscribe((user: IUser) => {
+      this.usersService.update(this.id,{  ...this.form.value, password }).pipe(
+        catchError((error: any) => {
+          this.messageService.showSuccessMessage('error', 'Something went wrong on server side');
+          return throwError({error})
+        })
+      ).subscribe((user: IUser) => {
         this.store.dispatch(updateUser({ user }));
+        this.messageService.showSuccessMessage('success', 'User was successfully updated');
       })
     }
     this.close();
@@ -85,6 +101,7 @@ export class UserModalComponent {
 
   onDeleteUser() {
     this.store.dispatch(deleteUser({ id: this.id }));
+    this.messageService.showSuccessMessage('success', 'User was successfully deleted');
     this.close();
   }
 }

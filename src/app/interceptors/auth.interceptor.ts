@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 })
 export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const modified = req.clone({setHeaders: {'Authorization': 'accessToken12414512'}});
+    const modified = req.clone({setHeaders: {'Authorization': 'accessToken12345678'}});
     return next.handle(modified);
   }
 }
