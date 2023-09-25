@@ -2,10 +2,9 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from "@ngrx/store";
 import { createUser, deleteUser, updateUser } from "../../store/users/users.actions";
-import {UsersService} from "../../services/users.service";
-import {IUser} from "../../common/interfaces";
+import { UsersService } from "../../services/users.service";
 import { MessageService } from "../../services/message.service";
-import { catchError } from "rxjs/operators";
+import { catchError, take } from "rxjs/operators";
 import { throwError } from "rxjs";
 
 @Component({
@@ -96,6 +95,7 @@ export class UserModalComponent {
       })
     } else if (this.action === 'edit') {
       this.usersService.update(this.id,{  ...this.form.value, password }).pipe(
+        take(1),
         catchError((error: any) => {
           this.messageService.showMessage('error', `Something went wrong on server side: ${error?.error}`);
           return throwError({error})
@@ -108,7 +108,7 @@ export class UserModalComponent {
             this.messageService.showMessage('error', `Something went wrong on server side: ${response.error}`);
           }
         } else {
-          this.store.dispatch(updateUser({ user: response }));
+          this.store.dispatch(updateUser({ user: {...response, id: this.id} }));
           this.messageService.showMessage('success', 'User was successfully updated');
           this.close();
         }

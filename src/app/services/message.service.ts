@@ -33,7 +33,7 @@ export class MessageService {
 
     setTimeout(() => {
       this.hideSuccessMessage();
-    }, 3000);
+    }, 2000);
   }
 
   private hideSuccessMessage() {
