@@ -10,7 +10,7 @@ import { MessageService } from "./message.service";
 @Injectable()
 export class UsersService {
   url = 'someServer';
-  serverEnabled = true;
+  serverEnabled = false;
 
   constructor(
     private http: HttpClient,
