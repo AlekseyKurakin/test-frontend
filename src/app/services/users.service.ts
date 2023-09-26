@@ -1,26 +1,31 @@
 import { Injectable } from "@angular/core";
 import { IUser } from "../common/interfaces";
 import { HttpClient } from "@angular/common/http";
-import { map, Observable, of } from "rxjs";
+import { catchError, map, Observable, of, throwError } from "rxjs";
 import { selectUsers } from "../store/users/users.selectors";
 import { Store } from "@ngrx/store";
 import { State } from "../store";
+import { MessageService } from "./message.service";
 
 @Injectable()
 export class UsersService {
   url = 'someServer';
-  serverEnabled = false;
+  serverEnabled = true;
 
   constructor(
     private http: HttpClient,
     protected store: Store<State>,
+    protected messageService: MessageService,
   ) {
   }
   mapResponse(response) {
     return response.pipe(
-      map((body: any) => body.data)
-    );
-  }
+      map((body: any) => body.data),
+      catchError((error: any) => {
+        this.messageService.showMessage('error', `Something went wrong on server side`);
+        return throwError({error})
+      })
+    )}
 
   getAll(filters: any): Observable<any> {
     return this.mapResponse(this.http.get(this.url, filters ));

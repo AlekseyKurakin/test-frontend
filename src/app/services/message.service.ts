@@ -29,6 +29,7 @@ export class MessageService implements OnDestroy {
     this.messageElement.textContent = message;
     this.renderer.addClass(this.messageElement, 'message');
     this.renderer.setStyle(this.messageElement, 'position', 'fixed');
+    this.renderer.setStyle(this.messageElement, 'z-index', '9999');
     this.renderer.setStyle(this.messageElement, 'top', '20px');
     this.renderer.setStyle(this.messageElement, 'right', '20px');
     this.renderer.setStyle(this.messageElement, 'background-color', this.messageColorByType[type]);
