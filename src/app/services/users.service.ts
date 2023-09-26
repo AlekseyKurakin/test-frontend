@@ -6,11 +6,12 @@ import { selectUsers } from "../store/users/users.selectors";
 import { Store } from "@ngrx/store";
 import { State } from "../store";
 import { MessageService } from "./message.service";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class UsersService {
   url = 'someServer';
-  serverEnabled = false;
+  serverEnabled = environment.serverEnabled;
 
   constructor(
     private http: HttpClient,
@@ -38,6 +39,7 @@ export class UsersService {
   create(user: IUser): Observable<any> {
     return this.serverEnabled ? this.mapResponse(this.http.post(this.url, user))
       : this.isUserNameTaken(user.userName, user.id).pipe(
+        //must be done on BE and returned as error
         map(isUserNameTaken => {
           if (isUserNameTaken) {
             return { error: 'userNameAlreadyTaken'};
@@ -51,6 +53,7 @@ export class UsersService {
   update(id: number, user: IUser): Observable<any> {
     return this.serverEnabled ? this.mapResponse( this.http.put(this.url + `/${id}`, user))
       : this.isUserNameTaken(user.userName, id).pipe(
+        //must be done on BE and returned as error
         map(isUserNameTaken => {
           if (isUserNameTaken) {
             return { error: 'userNameAlreadyTaken'};
@@ -65,7 +68,7 @@ export class UsersService {
     return this.serverEnabled ? this.mapResponse(this.http.delete(this.url + `/${id}`)) : of(id);
   }
 
-  private isUserNameTaken(userName: string, id: number): Observable<any> {
+  private isUserNameTaken(userName: string, id: number): Observable<boolean> {
     return this.store.select(selectUsers).pipe(
       map(users => users.some(user => (user.userName === userName) && (user.id !== id)))
     )
