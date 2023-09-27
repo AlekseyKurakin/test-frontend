@@ -10,7 +10,7 @@ const appRoutes: Routes = [
   { path: 'protected-page', component: MainPageComponent, canActivate: [AuthGuardService]},
   { path: 'forbidden', component: ForbiddenComponent},
   { path: 'error', component: NotFoundComponent},
-  { path: '**', redirectTo: '/errors'}
+  { path: '**', redirectTo: '/error'}
 ]
 
 @NgModule({
